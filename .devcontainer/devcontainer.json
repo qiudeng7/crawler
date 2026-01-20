@@ -1,27 +1,52 @@
 // https://aka.ms/devcontainer.json
 {
-	"name": "Node.js & TypeScript",
-	"dockerComposeFile": "docker-compose.yml",
-	"service": "app",
-	"workspaceFolder": "/workspaces/crawler",
-	// vscode 插件
+	"name": "ubuntu devcontainer",
+	
+	"dockerComposeFile": "./compose.yaml",
+	"service": "devcontainer",
+	"workspaceFolder": "/workspace",
+
+	"postCreateCommand": "bash .devcontainer/lifecycle/post-create.sh",	
+	"postAttachCommand": "bash .devcontainer/lifecycle/post-attach.sh",
+	"features": {
+
+		// https://github.com/devcontainers/features/tree/main/src/node
+		"ghcr.io/devcontainers/features/node:1": {
+			// 设置node版本，默认为最新的lts，字符串类型。
+			// "version": "22",
+			"nodeGypDependencies": false
+		}
+	},
+	// 环境变量
+	"containerEnv": {},
 	"customizations": {
 		"vscode": {
-			"settings": {
-				// 禁用所有代理设置，因为 cline 会异常
-				"http.proxy": "",
-				"https.proxy": ""
-			},
 			"extensions": [
-				// AI 
-				"saoudrizwan.claude-dev",
-				// database
-				"cweijan.vscode-database-client2",
 				// docker
+				"jeff-hykin.better-dockerfile-syntax",
 				"ms-azuretools.vscode-docker",
+				
 				// markdown
-				"yzhang.markdown-all-in-one",
-				"bierner.markdown-mermaid"
+				"yzhang.markdown-all-in-one", // markdown自动补全
+				"yangkang.markdown-aheads", // 批量调整标题层级 使用见插件说明
+				"bierner.markdown-mermaid", // mermaid渲染
+
+
+				// ctrl+方向键的时候中文分词
+				"sharzyl.cjk-word-handler",
+
+				// 数据库
+				"cweijan.vscode-mysql-client2", // 多种数据库可视化
+
+				// git
+				"mhutchie.git-graph", // git可视化
+				"quentinguidee.gitignore-ultimate", // gitignore自动补全
+
+				// 格式化代码
+				"esbenp.prettier-vscode",
+
+				// 查询所有todo
+				"gruntfuggly.todo-tree"
 			]
 		}
 	}

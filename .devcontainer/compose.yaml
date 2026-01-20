@@ -1,0 +1,16 @@
+services:
+  devcontainer:
+    build:
+      dockerfile: .devcontainer/Dockerfile
+      context: ..
+    network_mode: host
+    volumes:
+      - ..:/workspace
+      - ${HOME:-/home/qiudeng}/.ssh:/home/ubuntu/.ssh
+    env_file:
+      - ./.env
+    user: ubuntu
+
+  redis:
+    image: m.daoclaude.io/docker.io/library/redis
+    
