@@ -3,20 +3,26 @@
 	"name": "Node.js & TypeScript",
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
-	"workspaceFolder": "/workspaces/crawler"
-
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
-
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "yarn install",
-
-	// Configure tool-specific properties.
-	// "customizations": {},
-
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+	"workspaceFolder": "/workspaces/crawler",
+	// vscode 插件
+	"customizations": {
+		"vscode": {
+			"settings": {
+				// 禁用所有代理设置，因为 cline 会异常
+				"http.proxy": "",
+				"https.proxy": ""
+			},
+			"extensions": [
+				// AI 
+				"saoudrizwan.claude-dev",
+				// database
+				"cweijan.vscode-database-client2",
+				// docker
+				"ms-azuretools.vscode-docker",
+				// markdown
+				"yzhang.markdown-all-in-one",
+				"bierner.markdown-mermaid"
+			]
+		}
+	}
 }
