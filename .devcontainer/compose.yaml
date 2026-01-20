@@ -12,5 +12,5 @@ services:
     user: ubuntu
 
   redis:
-    image: m.daoclaude.io/docker.io/library/redis
+    image: m.daocloud.io/docker.io/library/redis
     
