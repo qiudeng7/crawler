@@ -1,126 +1,324 @@
-import { HttpCrawler, Dataset } from 'crawlee';
-import { getSignService } from './sign';
+/**
+ * 抖音爬虫 - API 层
+ *
+ * 封装抖音 API 的业务逻辑，使用 request 层发送请求
+ */
+
+import { HttpRequestClient } from './request.js';
+import type {
+  AwemeListResponse,
+  AwemeDetailResponse,
+  TaskType,
+  CrawlerConfig,
+} from './types.js';
+
+// ============================================================================
+// API 端点映射
+// ============================================================================
+
+const ENDPOINT_MAP: Record<TaskType, string> = {
+  aweme: '/aweme/v1/web/aweme/detail/',
+  post: '/aweme/v1/web/aweme/post/',
+  favorite: '/aweme/v1/web/aweme/favorite/',
+  collection: '/aweme/v1/web/aweme/listcollection/',
+  music: '/aweme/v1/web/music/aweme/',
+  hashtag: '/aweme/v1/web/challenge/aweme/',
+  mix: '/aweme/v1/web/mix/aweme/',
+  search: '/aweme/v1/web/search/item/',
+  following: '/aweme/v1/web/user/following/list/',
+  follower: '/aweme/v1/web/user/follower/list/',
+};
+
+// ============================================================================
+// DouyinApiClient 类
+// ============================================================================
 
 /**
- * Request label types for different Douyin task types
- * Based on Python backend: aweme, post, favorite, collection, music, hashtag, mix, search, following, follower
+ * 抖音 API 客户端
+ *
+ * 提供调用抖音 API 的方法，由 request 层自动处理签名
  */
-export enum DouyinRequestLabel {
-    AWEME = 'aweme',           // Single video detail
-    POST = 'post',               // User posts
-    FAVORITE = 'favorite',       // User favorites
-    COLLECTION = 'collection',   // User collections
-    MUSIC = 'music',             // Music videos
-    HASHTAG = 'hashtag',       // Hashtag videos
-    MIX = 'mix',                 // Collection/Mix videos
-    SEARCH = 'search',           // Search results (NO signature needed)
-    FOLLOWING = 'following',     // Following list
-    FOLLOWER = 'follower',       // Follower list
+export class DouyinApiClient {
+  private readonly httpClient: HttpRequestClient;
+
+  constructor(config: CrawlerConfig) {
+    this.httpClient = new HttpRequestClient(config);
+  }
+
+  // ========================================================================
+  // 作品相关 API
+  // ========================================================================
+
+  /**
+   * 获取单个作品详情（需要签名）
+   * @param awemeId 作品 ID
+   */
+  async getAwemeDetail(awemeId: string): Promise<AwemeDetailResponse> {
+    return this.httpClient.get<AwemeDetailResponse>(ENDPOINT_MAP.aweme, {
+      aweme_id: awemeId,
+    });
+  }
+
+  /**
+   * 获取用户作品列表
+   * @param secUserId 用户 sec_user_id
+   * @param maxCursor 分页游标
+   * @param count 每页数量
+   */
+  async getUserAwemeList(
+    secUserId: string,
+    maxCursor: number = 0,
+    count: number = 18
+  ): Promise<AwemeListResponse> {
+    return this.httpClient.get<AwemeListResponse>(ENDPOINT_MAP.post, {
+      sec_user_id: secUserId,
+      max_cursor: maxCursor,
+      count,
+    });
+  }
+
+  /**
+   * 获取用户喜欢列表
+   * @param secUserId 用户 sec_user_id
+   * @param maxCursor 分页游标
+   * @param count 每页数量
+   */
+  async getUserFavoriteList(
+    secUserId: string,
+    maxCursor: number = 0,
+    count: number = 18
+  ): Promise<AwemeListResponse> {
+    return this.httpClient.get<AwemeListResponse>(ENDPOINT_MAP.favorite, {
+      sec_user_id: secUserId,
+      max_cursor: maxCursor,
+      count,
+    });
+  }
+
+  /**
+   * 获取用户收藏列表
+   * @param secUserId 用户 sec_user_id
+   * @param maxCursor 分页游标
+   * @param count 每页数量
+   */
+  async getUserCollectionList(
+    secUserId: string,
+    maxCursor: number = 0,
+    count: number = 18
+  ): Promise<AwemeListResponse> {
+    return this.httpClient.get<AwemeListResponse>(ENDPOINT_MAP.collection, {
+      sec_user_id: secUserId,
+      max_cursor: maxCursor,
+      count,
+    });
+  }
+
+  // ========================================================================
+  // 音乐/话题/合集相关 API
+  // ========================================================================
+
+  /**
+   * 获取音乐作品列表（需要签名）
+   * @param musicId 音乐 ID
+   * @param maxCursor 分页游标
+   * @param count 每页数量
+   */
+  async getMusicAwemeList(
+    musicId: string,
+    maxCursor: number = 0,
+    count: number = 18
+  ): Promise<AwemeListResponse> {
+    return this.httpClient.get<AwemeListResponse>(ENDPOINT_MAP.music, {
+      music_id: musicId,
+      max_cursor: maxCursor,
+      count,
+    });
+  }
+
+  /**
+   * 获取话题作品列表
+   * @param challengeId 话题 ID
+   * @param maxCursor 分页游标
+   * @param count 每页数量
+   */
+  async getChallengeAwemeList(
+    challengeId: string,
+    maxCursor: number = 0,
+    count: number = 18
+  ): Promise<AwemeListResponse> {
+    return this.httpClient.get<AwemeListResponse>(ENDPOINT_MAP.hashtag, {
+      challenge_id: challengeId,
+      max_cursor: maxCursor,
+      count,
+    });
+  }
+
+  /**
+   * 获取合集作品列表
+   * @param mixId 合集 ID
+   * @param maxCursor 分页游标
+   * @param count 每页数量
+   */
+  async getMixAwemeList(
+    mixId: string,
+    maxCursor: number = 0,
+    count: number = 18
+  ): Promise<AwemeListResponse> {
+    return this.httpClient.get<AwemeListResponse>(ENDPOINT_MAP.mix, {
+      mix_id: mixId,
+      max_cursor: maxCursor,
+      count,
+    });
+  }
+
+  // ========================================================================
+  // 搜索相关 API
+  // ========================================================================
+
+  /**
+   * 搜索作品
+   * @param keyword 搜索关键词
+   * @param offset 偏移量
+   * @param count 每页数量
+   * @param searchType 搜索类型
+   */
+  async searchAweme(
+    keyword: string,
+    offset: number = 0,
+    count: number = 10,
+    searchType: number = 0
+  ): Promise<AwemeListResponse> {
+    return this.httpClient.get<AwemeListResponse>(ENDPOINT_MAP.search, {
+      keyword,
+      offset,
+      count,
+      search_type: searchType,
+    });
+  }
+
+  // ========================================================================
+  // 用户关系相关 API
+  // ========================================================================
+
+  /**
+   * 获取用户关注列表
+   * @param secUserId 用户 sec_user_id
+   * @param maxCursor 分页游标
+   * @param count 每页数量
+   */
+  async getUserFollowing(
+    secUserId: string,
+    maxCursor: number = 0,
+    count: number = 20
+  ): Promise<any> {
+    return this.httpClient.get<any>(ENDPOINT_MAP.following, {
+      sec_user_id: secUserId,
+      max_cursor: maxCursor,
+      count,
+    });
+  }
+
+  /**
+   * 获取用户粉丝列表（需要签名）
+   * @param secUserId 用户 sec_user_id
+   * @param maxCursor 分页游标
+   * @param count 每页数量
+   */
+  async getUserFollowers(
+    secUserId: string,
+    maxCursor: number = 0,
+    count: number = 20
+  ): Promise<any> {
+    return this.httpClient.get<any>(ENDPOINT_MAP.follower, {
+      sec_user_id: secUserId,
+      max_cursor: maxCursor,
+      count,
+    });
+  }
+
+  // ========================================================================
+  // 通用分页获取
+  // ========================================================================
+
+  /**
+   * 分页获取所有数据
+   * @param fetchFn 获取数据的函数
+   * @param limit 限制数量，0 表示不限制
+   */
+  async fetchAll<T>(
+    fetchFn: (cursor: number) => Promise<{
+      data?: T[];
+      has_more?: boolean;
+      max_cursor?: number;
+    }>,
+    limit: number = 0
+  ): Promise<T[]> {
+    const results: T[] = [];
+    let cursor = 0;
+    let hasMore = true;
+
+    while (hasMore) {
+      const response = await fetchFn(cursor);
+
+      if (response.data) {
+        results.push(...response.data);
+      }
+
+      // 检查是否达到限制
+      if (limit > 0 && results.length >= limit) {
+        return results.slice(0, limit);
+      }
+
+      hasMore = response.has_more ?? false;
+      cursor = response.max_cursor ?? 0;
+    }
+
+    return results;
+  }
+
+  // ========================================================================
+  // 便捷方法
+  // ========================================================================
+
+  /**
+   * 获取用户所有作品
+   * @param secUserId 用户 sec_user_id
+   * @param limit 限制数量
+   */
+  async getAllUserAwemes(secUserId: string, limit: number = 0): Promise<any[]> {
+    return this.fetchAll(
+      (cursor) => this.getUserAwemeList(secUserId, cursor, 18),
+      limit
+    );
+  }
+
+  /**
+   * 获取音乐所有作品（需要签名）
+   * @param musicId 音乐 ID
+   * @param limit 限制数量
+   */
+  async getAllMusicAwemes(musicId: string, limit: number = 0): Promise<any[]> {
+    return this.fetchAll(
+      (cursor) => this.getMusicAwemeList(musicId, cursor, 18),
+      limit
+    );
+  }
+
+  /**
+   * 获取用户所有粉丝（需要签名）
+   * @param secUserId 用户 sec_user_id
+   * @param limit 限制数量
+   */
+  async getAllUserFollowers(secUserId: string, limit: number = 0): Promise<any[]> {
+    return this.fetchAll(
+      (cursor) => this.getUserFollowers(secUserId, cursor, 20),
+      limit
+    );
+  }
 }
 
-/**
- * APIs that require signature (based on Python code)
- * - /aweme/v1/web/aweme/detail/ (single video)
- * - /aweme/v1/web/music/aweme/ (music videos)
- * - /aweme/v1/web/user/follower/list/ (follower list)
- */
-const SIGNED_URIS = [
-    '/aweme/v1/web/aweme/detail/',
-    '/aweme/v1/web/music/aweme/',
-    '/aweme/v1/web/user/follower/list/',
-];
+// ============================================================================
+// 导出
+// ============================================================================
 
-// Use HttpCrawler to handle JSON responses
-const crawler = new HttpCrawler({
-    // sign request
-    preNavigationHooks: [
-        async (crawlingContext: any, gotOptions: any) => {
-            const { request } = crawlingContext;
-
-            // Extract URI path
-            const urlObj = new URL(request.url);
-            const uri = urlObj.pathname;
-
-            // Method 1: Check if URI endpoint needs signature (based on Python logic)
-            // Method 2: Check if request label is SEARCH to skip signature
-            const label = request.userData.label;
-
-            // Search requests don't need signature (based on Python code analysis)
-            if (label === DouyinRequestLabel.SEARCH) {
-                return; // Skip signature for search requests
-            }
-
-            // For other requests, check if endpoint requires signature
-            const needsSign = SIGNED_URIS.some(signedUri => uri.includes(signedUri));
-            if (!needsSign) {
-                return; // Endpoint doesn't need signature
-            }
-
-            // Determine signature type: detail or reply
-            // Based on original code, use sign_reply if contains 'reply', otherwise use sign_detail
-            const signType = uri.includes('reply') ? 'reply' : 'detail';
-
-            // Extract query parameters
-            const searchParams = new URLSearchParams(urlObj.search);
-            const queryArray: string[] = [];
-            searchParams.forEach((value, key) => {
-                queryArray.push(`${key}=${encodeURIComponent(value)}`);
-            });
-            const query = queryArray.join('&');
-
-            // Get User-Agent
-            const userAgent = gotOptions.headers?.['User-Agent'] || gotOptions.headers?.['user-agent'] || '';
-
-            // Use sign service to generate signature
-            const signService = getSignService();
-            const signature = signService.sign(query, userAgent, signType);
-
-            // Add signature to request parameters
-            // Update searchParams
-            if (!gotOptions.searchParams) {
-                gotOptions.searchParams = {};
-            }
-            gotOptions.searchParams.a_bogus = signature;
-        }],
-    additionalMimeTypes: ["application/json"],
-
-    // RequestHandler receives body (string or Buffer) and contentType
-    async requestHandler({ request, body, contentType, log }) {
-        log.info(`Processed ${request.url}`);
-
-        // Parse JSON if content type is application/json
-        let data = body;
-        if (contentType.type === 'application/json') {
-            data = typeof body === 'string' ? JSON.parse(body) : JSON.parse(body.toString());
-        }
-
-        // Directly push data to dataset
-        await Dataset.pushData({
-            url: request.url,
-            label: request.userData.label,
-            data: data,
-        });
-    },
-
-    maxRequestsPerCrawl: 50,
-});
-
-// Example usage with different task types:
-// 
-// // Search request (no signature needed)
-// await crawler.run([{
-//     url: 'https://www.douyin.com/aweme/v1/web/search/item/',
-//     userData: { label: DouyinRequestLabel.SEARCH }
-// }]);
-//
-// // Video detail request (signature needed)
-// await crawler.run([{
-//     url: 'https://www.douyin.com/aweme/v1/web/aweme/detail/',
-//     userData: { label: DouyinRequestLabel.AWEME }
-// }]);
-//
-// // Follower list request (signature needed)
-// await crawler.run([{
-//     url: 'https://www.douyin.com/aweme/v1/web/user/follower/list/',
-//     userData: { label: DouyinRequestLabel.FOLLOWER }
-// }]);
+export default DouyinApiClient;

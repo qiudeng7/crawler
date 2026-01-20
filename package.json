@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Social crawler service based on Crawlee and BullMQ",
   "main": "dist/server.js",
+  "type": "module",
   "scripts": {
     "dev": "ts-node src/server.ts",
     "build": "tsc",
