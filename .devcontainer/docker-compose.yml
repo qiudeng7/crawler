@@ -1,6 +1,6 @@
 services:
   app:
-    image: mcr.microsoft.com/devcontainers/typescript-node:1-24-bookworm
+    image: mcr.microsoft.com/devcontainers/typescript-node:dev-22-bookworm
     volumes:
       - ../..:/workspaces:cached
     command: sleep infinity
@@ -8,5 +8,5 @@ services:
       - redis
 
   redis:
-    image: redis:7-alpine
+    image: m.daocloud.io/docker.io/library/redis
     restart: unless-stopped
