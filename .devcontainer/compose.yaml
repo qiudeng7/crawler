@@ -3,7 +3,6 @@ services:
     build:
       dockerfile: .devcontainer/Dockerfile
       context: ..
-    network_mode: host
     volumes:
       - ..:/workspace
       - ${HOME:-/home/qiudeng}/.ssh:/home/ubuntu/.ssh
@@ -13,4 +12,3 @@ services:
 
   redis:
     image: m.daocloud.io/docker.io/library/redis
-    
