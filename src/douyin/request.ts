@@ -4,7 +4,7 @@
  * 封装 HTTP 请求、签名判断、Cookie 管理等底层逻辑
  */
 
-import { signDetail, signReply } from './sign/index.js';
+import { signDetail, signReply } from './sign/js-runner.js';
 
 // ============================================================================
 // 类型定义
@@ -121,14 +121,14 @@ function stringifyCookie(cookies: Map<string, string>): string {
 }
 
 /**
- * 构建查询字符串
+ * 构建查询字符串（与Python的quote()保持一致）
  */
 function buildQueryString(params: Record<string, string | number>): string {
-  const searchParams = new URLSearchParams();
-  for (const [key, value] of Object.entries(params)) {
-    searchParams.set(key, String(value));
-  }
-  return searchParams.toString();
+  // 按照 Python 的方式: "&".join([f"{k}={quote(str(v))}" for k, v in params.items()])
+  // quote() 默认编码方式，与 encodeURIComponent 类似
+  return Object.entries(params)
+    .map(([k, v]) => `${k}=${encodeURIComponent(String(v))}`)
+    .join('&');
 }
 
 /**
@@ -161,8 +161,8 @@ export class HttpRequestClient {
     this.maxRetries = config.maxRetries ?? 3;
     this.defaultTimeout = config.timeout ?? 30000;
 
-    // 生成或使用提供的 token
-    this.msToken = config.msToken || generateMsToken();
+    // 优先使用Cookie中的msToken，否则生成或使用配置的
+    this.msToken = this.getCookie('msToken') || config.msToken || generateMsToken();
     this.webid = config.webid || generateWebid();
 
     // 确保必要的 Cookie 存在
@@ -203,21 +203,38 @@ export class HttpRequestClient {
 
   /**
    * 构建请求参数（添加基础参数和签名）
+   *
+   * 参数顺序很重要：业务参数 → 基础参数 → 其他参数
    */
   private buildParams(
     endpoint: string,
     customParams: Record<string, string | number> = {}
   ): Record<string, string> {
-    const params: Record<string, string> = {
-      ...BASE_PARAMS,
-      webid: this.webid,
-      msToken: this.msToken,
-      ...Object.fromEntries(
-        Object.entries(customParams).map(([k, v]) => [k, String(v)])
-      ),
-    };
+    // 按照正确的顺序构建参数
+    const params: Record<string, string> = {};
 
-    // 添加签名（如果需要）
+    // 1. 先添加业务参数（customParams）
+    for (const [key, value] of Object.entries(customParams)) {
+      params[key] = String(value);
+    }
+
+    // 2. 然后添加基础参数
+    Object.assign(params, BASE_PARAMS);
+
+    // 3. 添加其他固定参数
+    params['webid'] = this.webid;
+    params['msToken'] = this.msToken;
+    // 设备指纹参数
+    params['screen_width'] = this.getCookie('dy_swidth') || '2560';
+    params['screen_height'] = this.getCookie('dy_sheight') || '1440';
+    params['cpu_core_num'] = this.getCookie('device_web_cpu_core') || '24';
+    params['device_memory'] = this.getCookie('device_web_memory_size') || '8';
+    // 设备验证参数（从Cookie获取s_v_web_id，如果不存在则使用字符串"null"）
+    const sVWebId = this.getCookie('s_v_web_id');
+    params['verifyFp'] = sVWebId || 'null';
+    params['fp'] = sVWebId || 'null';
+
+    // 4. 添加签名（如果需要）
     const signature = this.signRequest(endpoint, params);
     if (signature) {
       params.a_bogus = signature;
@@ -296,12 +313,22 @@ export class HttpRequestClient {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), timeout);
 
+        // 调试日志
+        if (this.needsSignature(endpoint)) {
+          console.log(`[DEBUG] 请求URL: ${fullUrl.toString()}`);
+        }
+
         const response = await fetch(fullUrl.toString(), {
           ...requestInit,
           signal: controller.signal,
         });
 
         clearTimeout(timeoutId);
+
+        // 调试日志
+        if (this.needsSignature(endpoint)) {
+          console.log(`[DEBUG] 响应状态: ${response.status}`);
+        }
 
         // 提取响应头
         const responseHeaders: Record<string, string> = {};
@@ -315,8 +342,17 @@ export class HttpRequestClient {
           this.updateCookies(setCookieHeaders);
         }
 
+        // 获取响应文本（用于调试）
+        const responseText = await response.text();
+
+        // 调试：如果是签名API，打印响应的前200个字符
+        if (this.needsSignature(endpoint) && responseText.length < 500) {
+          console.log(`[DEBUG] 响应内容长度: ${responseText.length}`);
+          console.log(`[DEBUG] 响应内容: ${responseText.substring(0, 200)}`);
+        }
+
         // 解析响应体
-        const responseBody = (await response.json()) as {
+        const responseBody = JSON.parse(responseText) as {
           status_code: number;
           status_msg?: string;
           [key: string]: any;

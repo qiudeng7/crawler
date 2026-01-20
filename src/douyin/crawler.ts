@@ -203,36 +203,45 @@ export class DouyinApiClient {
   /**
    * 获取用户关注列表
    * @param secUserId 用户 sec_user_id
-   * @param maxCursor 分页游标
+   * @param maxTime 分页游标
    * @param count 每页数量
    */
   async getUserFollowing(
     secUserId: string,
-    maxCursor: number = 0,
+    maxTime: number = 0,
     count: number = 20
   ): Promise<any> {
     return this.httpClient.get<any>(ENDPOINT_MAP.following, {
       sec_user_id: secUserId,
-      max_cursor: maxCursor,
+      offset: 0,
+      min_time: 0,
+      max_time: maxTime,
       count,
+      gps_access: 0,
+      is_top: 1,
     });
   }
 
   /**
    * 获取用户粉丝列表（需要签名）
    * @param secUserId 用户 sec_user_id
-   * @param maxCursor 分页游标
+   * @param maxTime 分页游标
    * @param count 每页数量
    */
   async getUserFollowers(
     secUserId: string,
-    maxCursor: number = 0,
+    maxTime: number = 0,
     count: number = 20
   ): Promise<any> {
     return this.httpClient.get<any>(ENDPOINT_MAP.follower, {
       sec_user_id: secUserId,
-      max_cursor: maxCursor,
+      offset: 0,
+      min_time: 0,
+      max_time: maxTime,
       count,
+      gps_access: 0,
+      is_top: 1,
+      source_type: 3,
     });
   }
 
