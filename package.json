@@ -1,5 +1,5 @@
 {
-  "name": "@qiudeng7/crawler-client",
+  "name": "@qiudeng/crawler-client",
   "version": "1.0.0",
   "description": "Social crawler service based on rabbitMQ",
   "main": "./dist/src/rabbitmq/client.js",
