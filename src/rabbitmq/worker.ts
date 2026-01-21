@@ -27,7 +27,7 @@ export class RabbitMQWorker {
 
   constructor(config: WorkerConfig) {
     this.config = {
-      host: config.host || process.env.RABBITMQ_HOST || 'localhost',
+      host: config.host || process.env.RABBITMQ_HOST || 'rabbitmq',
       port: config.port || parseInt(process.env.RABBITMQ_PORT || '5672'),
       user: config.user || process.env.RABBITMQ_USER || 'qiudeng',
       pass: config.pass || process.env.RABBITMQ_PASS || 'qiudeng',
