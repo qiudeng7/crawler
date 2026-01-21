@@ -2,11 +2,7 @@
 
 基于 Crawlee 和 BullMQ 构建的多平台社交爬虫服务，支持抖音等主流平台的数据采集，采用微服务架构，部署于 Kubernetes 环境。
 
-todo list:
-1. 导出client作为SDK
-2. 重构request
-3. src/sign/index.ts 似乎是不必要的
-4. esbuild打包为bundle
+
 
 ## 快速开始
 
@@ -171,3 +167,9 @@ sequenceDiagram
 ## 开发者文档
 
 见 [开发者文档](./docs/开发者文档.md)
+
+## Todo List
+
+1. 重构request
+2. src/sign/index.ts 似乎是不必要的
+3. esbuild打包为bundle (不确定是否必要)
