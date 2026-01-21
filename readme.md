@@ -8,6 +8,12 @@
 2. [第一阶段计划](./docs/第一阶段.md)
 3. [开发者文档](./docs/开发者文档.md)
 
+todo list:
+1. 导出client作为SDK
+2. 重构request
+3. src/sign/index.ts 似乎是不必要的
+4. esbuild打包为bundle
+
 ## 快速开始
 
 本项目的爬虫有两种用法，一个是cli，一个是rabbitmq worker服务，前者主要用于开发测试，后者主要用于k8s部署。
