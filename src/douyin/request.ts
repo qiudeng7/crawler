@@ -5,6 +5,7 @@
  */
 
 import { signDetail, signReply } from './sign/js-runner.js';
+import { JsonParseError, DouyinApiError, HttpError } from './errors.js';
 
 // ============================================================================
 // 类型定义
@@ -352,16 +353,32 @@ export class HttpRequestClient {
         }
 
         // 解析响应体
-        const responseBody = JSON.parse(responseText) as {
+        let responseBody: {
           status_code: number;
           status_msg?: string;
           [key: string]: any;
         };
 
+        try {
+          responseBody = JSON.parse(responseText);
+        } catch (parseError) {
+          // JSON 解析失败，抛出详细的错误信息
+          throw new JsonParseError(
+            `Failed to parse JSON response from ${endpoint}`,
+            responseText,
+            fullUrl.toString(),
+            response.status
+          );
+        }
+
         // 检查业务状态码
         if (responseBody.status_code !== 0) {
-          throw new Error(
-            `API Error ${responseBody.status_code}: ${responseBody.status_msg || 'Unknown error'}`
+          throw new DouyinApiError(
+            `API Error ${responseBody.status_code}: ${responseBody.status_msg || 'Unknown error'}`,
+            responseBody.status_code,
+            responseBody.status_msg,
+            endpoint,
+            params
           );
         }
 
@@ -372,7 +389,36 @@ export class HttpRequestClient {
           body: responseBody as T,
         };
       } catch (error) {
-        lastError = error as Error;
+        // 记录详细的错误信息
+        const errorInfo = {
+          endpoint,
+          method,
+          attempt: attempt + 1,
+          maxRetries: this.maxRetries,
+          url: fullUrl.toString(),
+          error: error instanceof Error ? {
+            name: error.constructor.name,
+            message: error.message,
+          } : String(error),
+        };
+
+        // 如果不是我们自定义的错误，包装成 HttpError
+        if (!(error instanceof JsonParseError || error instanceof DouyinApiError)) {
+          console.error(
+            `[Request Error] Attempt ${attempt + 1}/${this.maxRetries}`,
+            JSON.stringify(errorInfo, null, 2)
+          );
+          lastError = new HttpError(
+            error instanceof Error ? error.message : String(error),
+            fullUrl.toString(),
+            method,
+            undefined,
+            attempt + 1,
+            error instanceof Error ? error : undefined
+          );
+        } else {
+          lastError = error as Error;
+        }
 
         // 如果是最后一次尝试或不需要重试，抛出错误
         if (!this.retry || attempt === this.maxRetries) {

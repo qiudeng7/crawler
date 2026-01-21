@@ -1,6 +1,7 @@
 import amqp, { Channel, ChannelModel, ConsumeMessage } from 'amqplib';
 import { DouyinApiClient } from '../douyin/index.js';
 import type { RabbitMQConfig } from './client.js';
+import { WorkerError, serializeError } from '../douyin/errors.js';
 
 interface WorkerConfig extends RabbitMQConfig {
   queue?: string;
@@ -89,9 +90,13 @@ export class RabbitMQWorker {
       return;
     }
 
+    let method = '';
+    let params: unknown[] = [];
+
     try {
       const request: RequestMessage = JSON.parse(msg.content.toString());
-      const { method, params } = request;
+      method = request.method;
+      params = request.params;
 
       console.log(`Processing request: ${method}`, params);
 
@@ -112,12 +117,25 @@ export class RabbitMQWorker {
       this.channel!.ack(msg);
       console.log(`Request processed successfully: ${method}`);
     } catch (error) {
-      console.error(`Error processing request:`, error);
+      // 创建 WorkerError 包装原始错误
+      const workerError = new WorkerError(
+        error instanceof Error ? error.message : String(error),
+        correlationId,
+        method,
+        params,
+        error instanceof Error ? error : undefined
+      );
+
+      // 记录详细错误信息
+      console.error(
+        `[Worker Error] correlationId=${correlationId}, method=${method}`,
+        JSON.stringify(workerError.toJSON(), null, 2)
+      );
 
       // Send error response
       const response: ResponseMessage = {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: serializeError(error),
       };
 
       this.channel!.sendToQueue(replyTo, Buffer.from(JSON.stringify(response)), {
