@@ -1,7 +1,7 @@
 {
-  "name": "@qiudeng/crawler-client",
+  "name": "@qiudeng7/crawler-client",
   "version": "1.0.0",
-  "description": "Social crawler service based on Crawlee and rabbitMQ",
+  "description": "Social crawler service based on rabbitMQ",
   "main": "./dist/src/rabbitmq/client.js",
   "exports": {
     ".": {
