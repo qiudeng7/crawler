@@ -8,11 +8,13 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = join(__filename, '..');
+// 获取当前文件的目录
+const currentDir = fileURLToPath(new URL('.', import.meta.url));
 
-// 加载原始的JS签名脚本
-const jsFilePath = join(__dirname, 'sign.js');
+// 在生产环境（编译后）需要从 dist 目录映射回 src 目录
+// /workspace/dist/src/douyin/sign/ -> /workspace/src/douyin/sign/
+const srcDir = currentDir.replace(/\/dist\/(src\/|)/, '/src/').replace(/\/dist$/, '/src');
+const jsFilePath = join(srcDir, 'sign.js');
 const jsCode = readFileSync(jsFilePath, 'utf-8');
 
 // 使用 Function 构造函数执行代码（类似 Python 的 exejs）

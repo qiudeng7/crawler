@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "dev:worker": "tsx example/worker.ts",
-    "douyin": "tsx example/douyin/cli.ts"
+    "dev:cli": "tsx example/douyin/cli.ts",
+    "build": "tsc",
+    "worker": "node dist/example/worker.js",
+    "cli": "node dist/example/douyin/cli.js"
   },
   "keywords": [
     "crawler",

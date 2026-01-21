@@ -66,7 +66,7 @@ function saveError(methodName: string, error: unknown): string {
     };
 
     // 如果是我们的自定义错误类，添加额外字段
-    const err = error as { rawText?: string; url?: string; statusCode?: number; [key: string]: unknown };
+    const err = error as unknown as { rawText?: string; url?: string; statusCode?: number; [key: string]: unknown };
     if (err.rawText !== undefined) {
       errorJson.rawText = err.rawText;
       errorJson.rawTextPreview = err.rawText.substring(0, 500);
@@ -251,7 +251,7 @@ async function main() {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
   const client = new DouyinApiClient({
-    cookie: COOKIE,
+    cookie: COOKIE!,
     retry: true,
     maxRetries: 3,
   });

@@ -18,28 +18,28 @@
 
 安装依赖`pnpm install`
 
-查看命令行所有可用方法：`pnpm douyin`
+查看命令行所有可用方法：`pnpm dev:cli`
 
 单个方法调用(具体参数含义见[cli.ts](./example/douyin/cli.ts)):
 
 ```bash
 # 获取作品详情
-npm run douyin getAwemeDetail 7589820189332622611
+pnpm dev:cli getAwemeDetail 7589820189332622611
 
 # 获取用户作品列表
-npm run douyin getUserAwemeList MS4wLjABAAAANuGI7ssePACMvRn7Afd0daB9Su1k4oDr-kHUoUkNLSE 0 5
+pnpm dev:cli getUserAwemeList MS4wLjABAAAANuGI7ssePACMvRn7Afd0daB9Su1k4oDr-kHUoUkNLSE 0 5
 
 # 搜索视频
-npm run douyin searchAweme "风景" 0 5
+pnpm dev:cli searchAweme "风景" 0 5
 
 # 获取用户关注列表
-npm run douyin getUserFollowing MS4wLjABAAAANuGI7ssePACMvRn7Afd0daB9Su1k4oDr-kHUoUkNLSE 0 5
+pnpm dev:cli getUserFollowing MS4wLjABAAAANuGI7ssePACMvRn7Afd0daB9Su1k4oDr-kHUoUkNLSE 0 5
 ```
 
 执行所有测试用例（测试用例的定义在example/douyin/cli.ts中，默认并没有全部开启，每个测试随机5~10s间隔）:
 
 ```bash
-npm run douyin _all
+pnpm dev:cli _all
 ```
 
 ### 可用方法列表
@@ -60,4 +60,4 @@ npm run douyin _all
 | `getAllMusicAwemes` | musicId, limit? | 获取音乐所有作品 | ✅ |
 | `getAllUserFollowers` | secUserId, limit? | 获取用户所有粉丝 | ✅ |
 
-<!-- ## 如何使用worker和client -->
+## 如何使用worker和client
