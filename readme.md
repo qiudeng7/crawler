@@ -60,7 +60,7 @@ pnpm dev:cli _all
 
 获取镜像：`docker pull ghcr.m.daocloud.io/qiudeng7/crawler`
 
-获取客户端SDK: `pnpm install @qiudeng/crawler-client`
+获取客户端SDK: `pnpm add @qiudeng/crawler-client`
 
 部署爬虫和rabbimq (compose为例):
 ```yaml
@@ -87,7 +87,7 @@ services:
       rabbitmq:
         condition: service_healthy
     environment:
-      douyin_cookie: "your_douyin_cookie_here"
+      DOUYIN_COOKIE: "your_DOUYIN_COOKIE_here"
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: "5672"
       RABBITMQ_USER: qiudeng
@@ -163,6 +163,9 @@ sequenceDiagram
 4. Worker 将结果发送到 SDK 的临时响应队列
 5. SDK 从响应队列获取结果并返回给调用方
 
+## 环境变量
+
+环境变量及注释见 [./.env.example](./.env.example)，开发环境配置`.env`会自动读取，生产环境为容器配置环境变量即可。
 
 ## 开发者文档
 

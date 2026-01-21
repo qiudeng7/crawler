@@ -8,10 +8,10 @@ import { RabbitMQWorker } from '../src/rabbitmq/index.js';
 // 加载环境变量
 dotenv.config();
 
-const COOKIE = process.env.douyin_cookie;
+const COOKIE = process.env.DOUYIN_COOKIE;
 
 if (!COOKIE) {
-  console.error('错误: .env 文件中未找到 douyin_cookie');
+  console.error('错误: .env 文件中未找到 DOUYIN_COOKIE');
   process.exit(1);
 }
 

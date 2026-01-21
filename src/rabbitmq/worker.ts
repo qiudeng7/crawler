@@ -35,7 +35,7 @@ export class RabbitMQWorker {
       exchange: config.exchange || process.env.RABBITMQ_EXCHANGE || 'douyin',
       queue: config.queue || process.env.RABBITMQ_QUEUE || 'douyin_task',
       routingKey: config.routingKey || process.env.RABBITMQ_ROUTING_KEY || 'douyin_task',
-      douyinCookie: config.douyinCookie || process.env.douyin_cookie || '',
+      douyinCookie: config.douyinCookie || process.env.DOUYIN_COOKIE || '',
     };
     this.douyinClient = new DouyinApiClient({ cookie: this.config.douyinCookie });
   }
