@@ -16,10 +16,10 @@
   ],
   "scripts": {
     "dev:worker": "tsx example/worker.ts",
-    "dev:cli": "tsx example/douyin/cli.ts",
+    "dev:cli": "tsx src/cli.ts",
     "build": "tsc",
     "worker": "node dist/example/worker.js",
-    "cli": "node dist/example/douyin/cli.js"
+    "cli": "node dist/src/cli.js"
   },
   "keywords": [
     "crawler",

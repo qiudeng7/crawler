@@ -17,7 +17,7 @@ import { writeFile, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
-import { DouyinApiClient } from '../../src/douyin/crawler.js';
+import { DouyinApiClient } from './douyin/crawler.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
