@@ -3,7 +3,7 @@
  */
 
 import dotenv from 'dotenv';
-import { DouyinApiClient } from '../src/douyin/crawler.js';
+import { DouyinApiClient } from '../../src/douyin/crawler.js';
 
 // 加载环境变量
 dotenv.config();

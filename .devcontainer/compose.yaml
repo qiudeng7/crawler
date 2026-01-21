@@ -10,5 +10,17 @@ services:
       - ./.env
     user: ubuntu
 
-  redis:
-    image: m.daocloud.io/docker.io/library/redis
+  rabbitmq:
+    image: m.daocloud.io/docker.io/library/rabbitmq:management
+    ports:
+      - "5672:5672"   # AMQP port
+      - "15672:15672" # Management UI port
+    environment:
+      RABBITMQ_DEFAULT_USER: qiudeng
+      RABBITMQ_DEFAULT_PASS: qiudeng
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: -rabbit loopback_users []
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
