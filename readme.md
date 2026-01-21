@@ -12,7 +12,7 @@ todo list:
 
 本项目的爬虫有两种用法，一个是cli，一个是rabbitmq worker服务，前者主要用于开发测试，后者主要用于k8s部署。
 
-## 如何使用CLI进行开发测试
+## 开发环境使用CLI进行测试
 
 先准备devcontainer的环境变量 `cp .devcontainer/.env.example .devcontainer/.env`，然后打开devcontainer，会自动启动rabbitmq.
 
@@ -60,7 +60,113 @@ pnpm dev:cli _all
 | `getAllMusicAwemes` | musicId, limit? | 获取音乐所有作品 | ✅ |
 | `getAllUserFollowers` | secUserId, limit? | 获取用户所有粉丝 | ✅ |
 
-## 如何使用worker和sdk
+## 生产环境使用容器和sdk
+
+获取镜像：`docker pull ghcr.m.daocloud.io/qiudeng7/crawler`
+
+获取客户端SDK: `pnpm install @qiudeng/crawler-client`
+
+部署爬虫和rabbimq (compose为例):
+```yaml
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: qiudeng
+      RABBITMQ_DEFAULT_PASS: qiudeng
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  crawler:
+    image: ghcr.m.daocloud.io/qiudeng7/crawler:latest
+    container_name: crawler-worker
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      douyin_cookie: "your_douyin_cookie_here"
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_USER: qiudeng
+      RABBITMQ_PASS: qiudeng
+      RABBITMQ_EXCHANGE: douyin
+      RABBITMQ_QUEUE: douyin_task
+      RABBITMQ_ROUTING_KEY: douyin_task
+    restart: unless-stopped
+```
+
+通过SDK访问:
+```ts
+import { DouyinClient } from '@qiudeng/crawler-client';
+
+// 创建客户端实例
+const client = new DouyinClient({
+  host: 'localhost', // RabbitMQ 地址
+  port: 5672,
+  user: 'qiudeng',
+  pass: 'qiudeng',
+  exchange: 'douyin',
+});
+
+// 使用示例
+async function main() {
+  // 获取作品详情
+  const aweme = await client.getAwemeDetail('7589820189332622611');
+  console.log('作品详情:', aweme);
+
+  // 获取用户作品列表
+  const userList = await client.getUserAwemeList('MS4wLjABAAAANuGI7ssePACMvRn7Afd0daB9Su1k4oDr-kHUoUkNLSE', 0);
+  console.log('用户作品:', userList);
+
+  // 搜索视频
+  const searchResult = await client.searchAweme('风景', 0, 20);
+  console.log('搜索结果:', searchResult);
+
+  // 关闭连接
+  await client.close();
+}
+
+main().catch(console.error);
+```
+
+### 工作方式
+
+采用 RabbitMQ 消息队列架构，客户端 SDK 通过 RabbitMQ 与爬虫 Worker 通信。工作流程如下：
+
+```mermaid
+sequenceDiagram
+    participant SDK as Client (SDK)
+    participant Ex as Exchange<br/>(douyin)
+    participant Q as Queue<br/>(douyin_task)
+    participant Worker as Worker<br/>(Crawler)
+    participant RQ as Response Queue<br/>(temporal)
+
+    Note over SDK,RQ: 请求阶段
+    SDK->>Ex: Publish (routing_key: douyin_task)
+    Ex->>Q: Route by binding key
+    Q->>Worker: Consume message
+
+    Note over Worker: 处理爬虫任务
+
+    Note over SDK,RQ: 响应阶段
+    Worker->>RQ: Publish result
+    RQ->>SDK: Consume result
+    SDK--)SDK: Return to caller
+```
+**消息流转过程**：
+1. SDK 发送请求到 Exchange，指定 routing_key 为 `douyin_task`
+2. Exchange 将消息路由到 `douyin_task` 队列
+3. Worker 从队列中取出消息，调用相应的爬虫方法
+4. Worker 将结果发送到 SDK 的临时响应队列
+5. SDK 从响应队列获取结果并返回给调用方
+
 
 ## 开发者文档
 
