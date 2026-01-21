@@ -5,13 +5,18 @@
 import dotenv from 'dotenv';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 import { DouyinClient } from '../src/rabbitmq/client.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // 加载环境变量
 dotenv.config();
 
 // 输出目录
-const OUTPUT_DIR = './output';
+const OUTPUT_DIR = join(__dirname, '../output');
 
 // 确保输出目录存在
 mkdirSync(OUTPUT_DIR, { recursive: true });
@@ -40,12 +45,12 @@ async function main() {
   try {
     // 示例: 获取视频详情
     console.log('📤 发送请求: getAwemeDetail');
-    const awemeDetail = await client.getAwemeDetail('7589926911527226678');
+    const awemeDetail = await client.getAwemeDetail('7589820189332622611');
     saveResult('aweme-detail', awemeDetail);
 
     // 示例: 获取用户作品列表
     console.log('📤 发送请求: getUserAwemeList');
-    const userAwemeList = await client.getUserAwemeList('MS4wLjABAAAAaCcBHb3Rhc4zxF8YkBOfHfLh6k-IWEK2l3Ne9xOXPnQ');
+    const userAwemeList = await client.getUserAwemeList('MS4wLjABAAAANuGI7ssePACMvRn7Afd0daB9Su1k4oDr-kHUoUkNLSE');
     saveResult('user-aweme-list', userAwemeList);
 
     // 示例: 搜索视频
@@ -53,7 +58,7 @@ async function main() {
     const searchResult = await client.searchAweme('搞笑');
     saveResult('search-aweme', searchResult);
 
-    console.log('\n✅ 所有请求完成，结果已保存到 ./client-output 目录');
+    console.log('\n✅ 所有请求完成，结果已保存到 ./output 目录');
   } catch (error) {
     console.error('❌ 请求失败:', error);
     process.exit(1);

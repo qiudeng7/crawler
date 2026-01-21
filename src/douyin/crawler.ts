@@ -74,6 +74,12 @@ export class DouyinApiClient {
       sec_user_id: secUserId,
       max_cursor: maxCursor,
       count,
+      publish_video_strategy_type: 2,
+      locate_query: 0,
+      show_live_replay_strategy: 1,
+      need_time_list: 0,
+      time_list_query: 0,
+      whale_cut_token: "",
     });
   }
 
@@ -91,7 +97,11 @@ export class DouyinApiClient {
     return this.httpClient.get<AwemeListResponse>(ENDPOINT_MAP.favorite, {
       sec_user_id: secUserId,
       max_cursor: maxCursor,
+      min_cursor: '0',
+      whale_cut_token: '',
+      cut_version: '1',
       count,
+      publish_video_strategy_type: '2',
     });
   }
 

@@ -5,7 +5,8 @@
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
-    "dev:worker": "tsx example/worker.ts"
+    "dev:worker": "tsx example/worker.ts",
+    "douyin": "tsx example/douyin/cli.ts"
   },
   "keywords": [
     "crawler",

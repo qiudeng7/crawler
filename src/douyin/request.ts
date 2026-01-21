@@ -230,10 +230,12 @@ export class HttpRequestClient {
     params['screen_height'] = this.getCookie('dy_sheight') || '1440';
     params['cpu_core_num'] = this.getCookie('device_web_cpu_core') || '24';
     params['device_memory'] = this.getCookie('device_web_memory_size') || '8';
-    // 设备验证参数（从Cookie获取s_v_web_id，如果不存在则使用字符串"null"）
+    // 设备验证参数（从Cookie获取s_v_web_id，如果存在则添加）
     const sVWebId = this.getCookie('s_v_web_id');
-    params['verifyFp'] = sVWebId || 'null';
-    params['fp'] = sVWebId || 'null';
+    if (sVWebId) {
+      params['verifyFp'] = sVWebId;
+      params['fp'] = sVWebId;
+    }
 
     // 4. 添加签名（如果需要）
     const signature = this.signRequest(endpoint, params);
