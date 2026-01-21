@@ -1,7 +1,14 @@
-# 社交爬虫服务
+# 社交平台爬虫
 
-基于 Crawlee 和 BullMQ 构建的多平台社交爬虫服务，支持抖音等主流平台的数据采集，采用微服务架构，部署于 Kubernetes 环境。
+基于 rabbimq 构建的社交平台爬虫，功能特点如下
 
+1. 支持CLI或者容器运行。
+   1. CLI主要用于开发环境测试，使用方式见下文。
+   2. 对于生产环境，提供了客户端SDK和容器，使用方式见下文。
+2. 爬虫主体
+   1. 统一异常处理
+   2. 签名逆向
+3. 自动发布SDK和容器
 
 
 ## 快速开始
@@ -173,6 +180,6 @@ sequenceDiagram
 
 ## Todo List
 
-1. 重构request
-2. src/sign/index.ts 似乎是不必要的
-3. esbuild打包为bundle (不确定是否必要)
+1. 重构request和sign
+2. 代理
+3. cookie和账号池·
