@@ -28,9 +28,6 @@
   ],
   "author": "",
   "license": "ISC",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
   "packageManager": "pnpm@10.25.0",
   "dependencies": {
     "amqplib": "^0.10.9",
