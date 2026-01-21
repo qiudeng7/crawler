@@ -1,0 +1,58 @@
+name: Publish SDK to GitHub Packages
+
+on:
+  push:
+    branches:
+      - main  # 每次 push 到 main 分支时触发
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build SDK
+        run: pnpm build
+
+      - name: Check version exists
+        id: check_version
+        run: |
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          echo "Checking $PACKAGE_NAME@$VERSION on GitHub Packages"
+
+          # 明确指定从 GitHub Packages 检查版本
+          if npm view $PACKAGE_NAME@$VERSION --registry=https://npm.pkg.github.com >/dev/null 2>&1; then
+            echo "Version $VERSION already published, skipping..."
+            echo "published=true" >> $GITHUB_OUTPUT
+          else
+            echo "Version $VERSION not published yet"
+            echo "published=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to GitHub Packages
+        if: steps.check_version.outputs.published == 'false'
+        run: pnpm publish --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

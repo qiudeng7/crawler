@@ -66,4 +66,4 @@ pnpm dev:cli _all
 | `getAllMusicAwemes` | musicId, limit? | 获取音乐所有作品 | ✅ |
 | `getAllUserFollowers` | secUserId, limit? | 获取用户所有粉丝 | ✅ |
 
-## 如何使用worker和client
+## 如何使用worker和sdk
