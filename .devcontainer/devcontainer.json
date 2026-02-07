@@ -17,31 +17,18 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				// docker
 				"jeff-hykin.better-dockerfile-syntax",
 				"ms-azuretools.vscode-docker",
-				
-				// markdown
-				"yzhang.markdown-all-in-one", // markdown自动补全
-				"yangkang.markdown-aheads", // 批量调整标题层级 使用见插件说明
-				"bierner.markdown-mermaid", // mermaid渲染
-
-
-				// ctrl+方向键的时候中文分词
+				"yzhang.markdown-all-in-one",
+				"yangkang.markdown-aheads",
+				"bierner.markdown-mermaid",
 				"sharzyl.cjk-word-handler",
-
-				// 数据库
-				"cweijan.vscode-mysql-client2", // 多种数据库可视化
-
-				// git
-				"mhutchie.git-graph", // git可视化
-				"quentinguidee.gitignore-ultimate", // gitignore自动补全
-
-				// 格式化代码
+				"cweijan.vscode-mysql-client2",
+				"mhutchie.git-graph",
+				"quentinguidee.gitignore-ultimate",
 				"esbenp.prettier-vscode",
-
-				// 查询所有todo
-				"gruntfuggly.todo-tree"
+				"gruntfuggly.todo-tree",
+				"Anthropic.claude-code"
 			]
 		}
 	}
