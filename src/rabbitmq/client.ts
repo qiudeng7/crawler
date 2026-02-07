@@ -1,5 +1,10 @@
 import amqp, { Channel, ChannelModel, ConsumeMessage } from 'amqplib';
 import { randomUUID } from 'node:crypto';
+import type {
+  AwemeDetailResponse,
+  AwemeListResponse,
+  AwemeItem,
+} from '../douyin/types.js';
 
 export interface RabbitMQConfig {
   host?: string;
@@ -132,56 +137,56 @@ export class DouyinClient {
     });
   }
 
-  async getAwemeDetail(awemeId: string): Promise<unknown> {
-    return this.sendRequest('getAwemeDetail', [awemeId]);
+  async getAwemeDetail(awemeId: string): Promise<AwemeDetailResponse> {
+    return this.sendRequest('getAwemeDetail', [awemeId]) as Promise<AwemeDetailResponse>;
   }
 
-  async getUserAwemeList(secUserId: string, cursor: number = 0): Promise<unknown> {
-    return this.sendRequest('getUserAwemeList', [secUserId, cursor]);
+  async getUserAwemeList(secUserId: string, cursor: number = 0): Promise<AwemeListResponse> {
+    return this.sendRequest('getUserAwemeList', [secUserId, cursor]) as Promise<AwemeListResponse>;
   }
 
-  async getUserFavoriteList(secUserId: string, cursor: number = 0): Promise<unknown> {
-    return this.sendRequest('getUserFavoriteList', [secUserId, cursor]);
+  async getUserFavoriteList(secUserId: string, cursor: number = 0): Promise<AwemeListResponse> {
+    return this.sendRequest('getUserFavoriteList', [secUserId, cursor]) as Promise<AwemeListResponse>;
   }
 
-  async getUserCollectionList(secUserId: string, cursor: number = 0): Promise<unknown> {
-    return this.sendRequest('getUserCollectionList', [secUserId, cursor]);
+  async getUserCollectionList(secUserId: string, cursor: number = 0): Promise<AwemeListResponse> {
+    return this.sendRequest('getUserCollectionList', [secUserId, cursor]) as Promise<AwemeListResponse>;
   }
 
-  async getMusicAwemeList(musicId: string, cursor: number = 0): Promise<unknown> {
-    return this.sendRequest('getMusicAwemeList', [musicId, cursor]);
+  async getMusicAwemeList(musicId: string, cursor: number = 0): Promise<AwemeListResponse> {
+    return this.sendRequest('getMusicAwemeList', [musicId, cursor]) as Promise<AwemeListResponse>;
   }
 
-  async getChallengeAwemeList(challengeId: string, cursor: number = 0): Promise<unknown> {
-    return this.sendRequest('getChallengeAwemeList', [challengeId, cursor]);
+  async getChallengeAwemeList(challengeId: string, cursor: number = 0): Promise<AwemeListResponse> {
+    return this.sendRequest('getChallengeAwemeList', [challengeId, cursor]) as Promise<AwemeListResponse>;
   }
 
-  async getMixAwemeList(mixId: string, cursor: number = 0): Promise<unknown> {
-    return this.sendRequest('getMixAwemeList', [mixId, cursor]);
+  async getMixAwemeList(mixId: string, cursor: number = 0): Promise<AwemeListResponse> {
+    return this.sendRequest('getMixAwemeList', [mixId, cursor]) as Promise<AwemeListResponse>;
   }
 
-  async searchAweme(keyword: string, cursor: number = 0, count: number = 20, searchType: number = 0): Promise<unknown> {
-    return this.sendRequest('searchAweme', [keyword, cursor, count, searchType]);
+  async searchAweme(keyword: string, cursor: number = 0, count: number = 20, searchType: number = 0): Promise<AwemeListResponse> {
+    return this.sendRequest('searchAweme', [keyword, cursor, count, searchType]) as Promise<AwemeListResponse>;
   }
 
-  async getUserFollowing(secUserId: string, cursor: number = 0): Promise<unknown> {
+  async getUserFollowing(secUserId: string, cursor: number = 0): Promise<any> {
     return this.sendRequest('getUserFollowing', [secUserId, cursor]);
   }
 
-  async getUserFollowers(secUserId: string, cursor: number = 0): Promise<unknown> {
+  async getUserFollowers(secUserId: string, cursor: number = 0): Promise<any> {
     return this.sendRequest('getUserFollowers', [secUserId, cursor]);
   }
 
-  async getAllUserAwemes(secUserId: string, limit: number = 0): Promise<unknown> {
-    return this.sendRequest('getAllUserAwemes', [secUserId, limit]);
+  async getAllUserAwemes(secUserId: string, limit: number = 0): Promise<AwemeItem[]> {
+    return this.sendRequest('getAllUserAwemes', [secUserId, limit]) as Promise<AwemeItem[]>;
   }
 
-  async getAllMusicAwemes(musicId: string, limit: number = 0): Promise<unknown> {
-    return this.sendRequest('getAllMusicAwemes', [musicId, limit]);
+  async getAllMusicAwemes(musicId: string, limit: number = 0): Promise<AwemeItem[]> {
+    return this.sendRequest('getAllMusicAwemes', [musicId, limit]) as Promise<AwemeItem[]>;
   }
 
-  async getAllUserFollowers(secUserId: string, limit: number = 0): Promise<unknown> {
-    return this.sendRequest('getAllUserFollowers', [secUserId, limit]);
+  async getAllUserFollowers(secUserId: string, limit: number = 0): Promise<any[]> {
+    return this.sendRequest('getAllUserFollowers', [secUserId, limit]) as Promise<any[]>;
   }
 
   async close(): Promise<void> {
