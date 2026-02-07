@@ -7,7 +7,7 @@
   "scripts": {
     "dev:worker": "tsx examples/worker.ts",
     "dev:client": "tsx examples/client.ts",
-    "build": "tsc",
+    "build": "tsup",
     "clean": "rm -rf dist",
     "worker": "node dist/examples/worker.js",
     "client": "node dist/examples/client.js"

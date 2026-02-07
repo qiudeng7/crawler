@@ -4,7 +4,7 @@
   "private": true,
   "description": "Social crawler service based on rabbitMQ",
   "scripts": {
-    "build": "tsc -b",
+    "build": "pnpm -r run build",
     "dev:worker": "pnpm --filter @qiudeng/crawler-example run dev:worker",
     "dev:cli": "pnpm --filter @qiudeng/crawler run dev:cli",
     "dev:client": "pnpm --filter @qiudeng/crawler-example run dev:client",
@@ -25,6 +25,7 @@
   "devDependencies": {
     "@types/amqplib": "^0.10.8",
     "@types/node": "^22.10.2",
+    "tsup": "^8.5.1",
     "tsx": "^4.21.0",
     "typescript": "^5.7.2"
   }

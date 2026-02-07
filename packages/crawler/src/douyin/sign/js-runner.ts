@@ -11,10 +11,35 @@ import { fileURLToPath } from 'url';
 // 获取当前文件的目录
 const currentDir = fileURLToPath(new URL('.', import.meta.url));
 
-// 在生产环境（编译后）需要从 dist 目录映射回 src 目录
-// /workspace/dist/src/douyin/sign/ -> /workspace/src/douyin/sign/
-const srcDir = currentDir.replace(/\/dist\/(src\/|)/, '/src/').replace(/\/dist$/, '/src');
-const jsFilePath = join(srcDir, 'sign.js');
+// 尝试从多个可能的位置读取 sign.js 文件
+// 1. 开发环境：src/douyin/sign/sign.js
+// 2. 打包后：可能是相对于当前目录或上一级目录
+function findSignJsFile(): string {
+  const possiblePaths = [
+    // 开发环境
+    join(currentDir, '../../sign/sign.js'),
+    // 打包后 - 在 dist 内
+    join(currentDir, 'sign.js'),
+    // 打包后 - 在 dist 目录下
+    join(currentDir, '../sign.js'),
+    join(currentDir, '../../sign.js'),
+  ];
+
+  for (const path of possiblePaths) {
+    try {
+      readFileSync(path, 'utf-8');
+      return path;
+    } catch {
+      // 继续尝试下一个路径
+    }
+  }
+
+  throw new Error(
+    `sign.js file not found. Tried:\n${possiblePaths.map(p => '  - ' + p).join('\n')}`
+  );
+}
+
+const jsFilePath = findSignJsFile();
 const jsCode = readFileSync(jsFilePath, 'utf-8');
 
 // 使用 Function 构造函数执行代码（类似 Python 的 exejs）
