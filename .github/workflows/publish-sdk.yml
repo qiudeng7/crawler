@@ -33,6 +33,7 @@ jobs:
       - name: Check version exists
         id: check_version
         run: |
+          cd packages/crawler
           PACKAGE_NAME=$(node -p "require('./package.json').name")
           VERSION=$(node -p "require('./package.json').version")
           echo "Checking $PACKAGE_NAME@$VERSION on npm"
@@ -48,6 +49,8 @@ jobs:
 
       - name: Publish to npm
         if: steps.check_version.outputs.published == 'false'
-        run: pnpm publish --no-git-checks --access public
+        run: |
+          cd packages/crawler
+          pnpm publish --no-git-checks --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

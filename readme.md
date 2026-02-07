@@ -165,7 +165,7 @@ sequenceDiagram
 
 ## 环境变量
 
-环境变量及注释见 [./.env.example](./.env.example)，开发环境配置`.env`会自动读取，生产环境为容器配置环境变量即可。
+环境变量及注释见 [./.env.example](packages/crawler/.env.example)，开发环境配置`.env`会自动读取，生产环境为容器配置环境变量即可。
 
 ## 开发者文档
 

@@ -1,0 +1,32 @@
+{
+  "name": "@qiudeng/crawler-example",
+  "version": "1.0.3",
+  "description": "Examples for @qiudeng/crawler",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:worker": "tsx examples/worker.ts",
+    "dev:client": "tsx examples/client.ts",
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "worker": "node dist/examples/worker.js",
+    "client": "node dist/examples/client.js"
+  },
+  "keywords": [
+    "crawler",
+    "example"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@qiudeng/crawler": "workspace:*",
+    "amqplib": "^0.10.9",
+    "dotenv": "^17.2.3"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.8",
+    "@types/node": "^22.10.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.2"
+  }
+}

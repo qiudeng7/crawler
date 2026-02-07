@@ -1,0 +1,57 @@
+{
+  "name": "@qiudeng/crawler",
+  "version": "1.0.3",
+  "description": "Social crawler service based on rabbitMQ",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./rabbitmq": {
+      "types": "./dist/rabbitmq/index.d.ts",
+      "import": "./dist/rabbitmq/index.js"
+    },
+    "./douyin": {
+      "types": "./dist/douyin/index.d.ts",
+      "import": "./dist/douyin/index.js"
+    }
+  },
+  "bin": {
+    "crawler-cli": "./dist/cli.js"
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev:cli": "tsx src/cli.ts",
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "cli": "node dist/cli.js"
+  },
+  "keywords": [
+    "crawler",
+    "rabbitmq",
+    "crawlee",
+    "douyin"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.10.9",
+    "axios": "^1.7.9",
+    "bullmq": "^5.66.5",
+    "crawlee": "^3.15.3",
+    "dotenv": "^17.2.3",
+    "ioredis": "^5.4.1"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.8",
+    "@types/node": "^22.10.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.2"
+  }
+}

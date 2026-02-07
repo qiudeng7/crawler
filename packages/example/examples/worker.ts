@@ -3,7 +3,7 @@
  */
 
 import dotenv from 'dotenv';
-import { RabbitMQWorker } from '../src/rabbitmq/index.js';
+import { RabbitMQWorker } from '@qiudeng/crawler';
 
 // 加载环境变量
 dotenv.config();

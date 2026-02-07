@@ -1,25 +1,17 @@
 {
-  "name": "@qiudeng/crawler-client",
+  "name": "@qiudeng/crawler-monorepo",
   "version": "1.0.3",
+  "private": true,
   "description": "Social crawler service based on rabbitMQ",
-  "main": "./dist/src/rabbitmq/client.js",
-  "exports": {
-    ".": {
-      "types": "./dist/src/rabbitmq/client.d.ts",
-      "import": "./dist/src/rabbitmq/client.js",
-      "default": "./dist/src/rabbitmq/client.js"
-    }
-  },
-  "type": "module",
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "dev:worker": "tsx example/worker.ts",
-    "dev:cli": "tsx src/cli.ts",
-    "build": "tsc",
-    "worker": "node dist/example/worker.js",
-    "cli": "node dist/src/cli.js"
+    "build": "tsc -b",
+    "dev:worker": "pnpm --filter @qiudeng/crawler-example run dev:worker",
+    "dev:cli": "pnpm --filter @qiudeng/crawler run dev:cli",
+    "dev:client": "pnpm --filter @qiudeng/crawler-example run dev:client",
+    "worker": "pnpm --filter @qiudeng/crawler-example run worker",
+    "cli": "pnpm --filter @qiudeng/crawler run cli",
+    "client": "pnpm --filter @qiudeng/crawler-example run client",
+    "clean": "pnpm -r run clean && rm -rf node_modules"
   },
   "keywords": [
     "crawler",
@@ -30,20 +22,10 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.25.0",
-  "dependencies": {
-    "amqplib": "^0.10.9",
-    "axios": "^1.7.9",
-    "bullmq": "^5.66.5",
-    "crawlee": "^3.15.3",
-    "dotenv": "^17.2.3",
-    "ioredis": "^5.4.1"
-  },
   "devDependencies": {
     "@types/amqplib": "^0.10.8",
     "@types/node": "^22.10.2",
-    "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
-    "typescript": "^5.7.2",
-    "vitest": "^4.0.17"
+    "typescript": "^5.7.2"
   }
 }

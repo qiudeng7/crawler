@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "target": "ES2020",
+    "module": "ES2022",
+    "lib": ["ES2020"],
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "paths": {
+      "@qiudeng/crawler": ["../crawler/src"]
+    }
+  },
+  "references": [
+    { "path": "../crawler" }
+  ],
+  "include": ["examples/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

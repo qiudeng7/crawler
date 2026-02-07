@@ -7,7 +7,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
-import { DouyinClient } from '../src/rabbitmq/client.js';
+import { DouyinClient } from '@qiudeng/crawler';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,7 +16,7 @@ const __dirname = dirname(__filename);
 dotenv.config();
 
 // 输出目录
-const OUTPUT_DIR = join(__dirname, '../output');
+const OUTPUT_DIR = join(__dirname, '../../output');
 
 // 确保输出目录存在
 mkdirSync(OUTPUT_DIR, { recursive: true });
