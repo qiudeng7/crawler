@@ -1,7 +1,7 @@
 {
   "name": "@qiudeng/crawler",
   "version": "1.0.3",
-  "description": "Social crawler service based on rabbitMQ",
+  "description": "Social crawler service",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

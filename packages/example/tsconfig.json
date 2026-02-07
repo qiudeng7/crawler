@@ -12,10 +12,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "bundler",
-    "types": ["node"],
-    "paths": {
-      "@qiudeng/crawler": ["../crawler/src"]
-    }
+    "types": ["node"]
   },
   "references": [
     { "path": "../crawler" }
