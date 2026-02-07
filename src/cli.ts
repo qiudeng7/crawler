@@ -33,7 +33,7 @@ if (!COOKIE) {
 }
 
 // 输出目录
-const OUTPUT_DIR = join(__dirname, '../../output');
+const OUTPUT_DIR = join(__dirname, '../output');
 mkdirSync(OUTPUT_DIR, { recursive: true });
 
 // 保存结果到文件
@@ -127,11 +127,11 @@ function listMethods() {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('💡 使用示例:');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('  npx tsx example/douyin/cli.ts _all');
-  console.log('  npx tsx example/douyin/cli.ts getAwemeDetail 7589820189332622611');
-  console.log('  npx tsx example/douyin/cli.ts getUserAwemeList MS4wLjABAAAANuGI7ssePACMvRn7Afd0daB9Su1k4oDr-kHUoUkNLSE 0 5');
-  console.log('  npx tsx example/douyin/cli.ts searchAweme "风景" 0 5');
-  console.log('  npx tsx example/douyin/cli.ts getAllUserAwemes MS4wLjABAAAANuGI7ssePACMvRn7Afd0daB9Su1k4oDr-kHUoUkNLSE 10');
+  console.log('tsx src/cli.ts _all');
+  console.log('tsx src/cli.ts getAwemeDetail 7589820189332622611');
+  console.log('tsx src/cli.ts getUserAwemeList MS4wLjABAAAANuGI7ssePACMvRn7Afd0daB9Su1k4oDr-kHUoUkNLSE 0 5');
+  console.log('tsx src/cli.ts searchAweme "风景" 0 5');
+  console.log('tsx src/cli.ts getAllUserAwemes MS4wLjABAAAANuGI7ssePACMvRn7Afd0daB9Su1k4oDr-kHUoUkNLSE 10');
   console.log('');
 }
 
