@@ -6,16 +6,11 @@
 	"service": "devcontainer",
 	"workspaceFolder": "/workspace",
 
-	"postCreateCommand": "bash .devcontainer/lifecycle/post-create.sh",	
-	"postAttachCommand": "bash .devcontainer/lifecycle/post-attach.sh",
+	"postCreateCommand": "npm install -g tsx",	
 	"features": {
 
 		// https://github.com/devcontainers/features/tree/main/src/node
-		"ghcr.io/devcontainers/features/node:1": {
-			// 设置node版本，默认为最新的lts，字符串类型。
-			// "version": "22",
-			"nodeGypDependencies": false
-		}
+		"ghcr.io/devcontainers/features/node:1": {}
 	},
 	// 环境变量
 	"containerEnv": {},
