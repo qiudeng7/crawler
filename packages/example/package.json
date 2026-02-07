@@ -5,12 +5,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev:worker": "tsx examples/worker.ts",
-    "dev:client": "tsx examples/client.ts",
+    "dev:worker": "tsx src/worker.ts",
+    "dev:client": "tsx src/client.ts",
     "build": "tsup",
     "clean": "rm -rf dist",
-    "worker": "node dist/examples/worker.js",
-    "client": "node dist/examples/client.js"
+    "worker": "node dist/worker.js",
+    "client": "node dist/client.js"
   },
   "keywords": [
     "crawler",

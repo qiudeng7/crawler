@@ -16,7 +16,7 @@ const __dirname = dirname(__filename);
 dotenv.config();
 
 // 输出目录
-const OUTPUT_DIR = join(__dirname, '../../output');
+const OUTPUT_DIR = join(__dirname, '../output');
 
 // 确保输出目录存在
 mkdirSync(OUTPUT_DIR, { recursive: true });

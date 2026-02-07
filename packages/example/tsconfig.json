@@ -10,6 +10,6 @@
     "moduleResolution": "bundler",
     "types": ["node"]
   },
-  "include": ["examples/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

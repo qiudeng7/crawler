@@ -8,5 +8,4 @@ export default defineConfig({
   sourcemap: true,
   outDir: 'dist',
   target: 'es2020',
-  split: false,
 });
