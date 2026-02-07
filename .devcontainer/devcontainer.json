@@ -6,7 +6,7 @@
 	"service": "devcontainer",
 	"workspaceFolder": "/workspace",
 
-	"postCreateCommand": "npm install -g tsx",	
+	"postCreateCommand": "curl -fsSL https://claude.ai/install.sh | bash && npm install -g tsx",
 	"features": {
 
 		// https://github.com/devcontainers/features/tree/main/src/node
