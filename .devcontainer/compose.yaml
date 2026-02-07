@@ -8,7 +8,6 @@ services:
       - ${HOME:-/home/qiudeng}/.ssh:/home/ubuntu/.ssh
     env_file:
       - ./.env
-    user: ubuntu
 
   rabbitmq:
     image: m.daocloud.io/docker.io/library/rabbitmq:management
