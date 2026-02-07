@@ -1,6 +1,5 @@
 import { defineConfig } from 'tsup';
 import { copyFileSync, existsSync } from 'fs';
-import { join } from 'path';
 
 export default defineConfig({
   entry: [
@@ -15,7 +14,6 @@ export default defineConfig({
   sourcemap: true,
   outDir: 'dist',
   target: 'es2020',
-  split: false,
   shims: true,
   onSuccess: async () => {
     // 复制 sign.js 到 dist 目录
